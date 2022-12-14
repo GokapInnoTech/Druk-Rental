@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+<link rel="stylesheet" href="{% static 'css/ab.css' %}">
+<title> login</title>
+</head>
+<body>
+  <body>
+    <div class="login-page">
+      <div class="form">
+        <div class="login">
+          <div class="login-header">
+            <h3><a href="/">Home</a></h3>
+            <h3>LOGIN</h3>
+            <p>Please enter your credentials to login.</p>
+            
+          </div>
+        </div>
+        <form class="login-form" method="POST" action="/login/" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% if msg %}
+          <center style="color: red;">{{msg}}</center>
+          {% endif %}
+          <input type="text" name="username" placeholder="username" required/>
+          <input type="password" name="password" placeholder="password" required/>
+          <button type="submit" class="btn btn-primary" style="color:blue;">Login</button>
+          <p class="message"> <a href="/forgot/">Forgot Password</a></p>
+          <p class="message"> Don't have an Account??<a href="/sign/">Create One.</a></p>
+        </form>
+      </div>
+    </div>
+</body>
+</body>
+</html>

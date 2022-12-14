@@ -1,0 +1,31 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+{% block content %}
+        <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+            <div class="container mt-5">
+                <form action="/helpdesk/" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="exampleFormControlTextarea1">Message</label>
+                        <textarea name="message" class="form-control" id="exampleFormControlTextarea1" rows="10" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-info" style="margin-left: 500px; border-radius: 20px;">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+  {% endblock %}

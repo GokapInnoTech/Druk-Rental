@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>House Rental</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
+    <!-- Pignose Calender -->
+    <link href="./plugins/pg-calendar/css/pignose.calendar.min.css" rel="stylesheet">
+    <!-- Chartist -->
+    <link rel="stylesheet" href="./plugins/chartist/css/chartist.min.css">
+    <link rel="stylesheet" href="./plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css">
+    <!-- Custom Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <style>
+        #wrapper {
+            width: 600px;
+            margin: 50px auto;
+            height: 400px;
+            position: relative;
+            color: #fff;
+            text-shadow: rgba(0, 0, 0, 0.1) 2px 2px 0px;
+        }
+        
+        #slider-wrap {
+            width: 600px;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #slider-wrap ul#slider {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        #slider-wrap ul#slider li {
+            float: left;
+            position: relative;
+            width: 600px;
+            height: 400px;
+        }
+        
+        #slider-wrap ul#slider li>div {
+            position: absolute;
+            top: 20px;
+            left: 35px;
+        }
+        
+        #slider-wrap ul#slider li>div h3 {
+            font-size: 36px;
+            text-transform: uppercase;
+        }
+        
+        #slider-wrap ul#slider li>div span {
+            font-family: Neucha, Arial, sans serif;
+            font-size: 21px;
+        }
+        
+        #slider-wrap ul#slider li i {
+            text-align: center;
+            line-height: 400px;
+            display: block;
+            width: 100%;
+            font-size: 90px;
+        }
+        /*btns*/
+        
+        .btns {
+            position: absolute;
+            width: 50px;
+            height: 60px;
+            top: 50%;
+            margin-top: -25px;
+            line-height: 57px;
+            text-align: center;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -ms-user-select: none;
+            -webkit-transition: all 0.1s ease;
+            -moz-transition: all 0.1s ease;
+            -o-transition: all 0.1s ease;
+            -ms-transition: all 0.1s ease;
+            transition: all 0.1s ease;
+        }
+        
+        .btns:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        #next {
+            right: -50px;
+            border-radius: 7px 0px 0px 7px;
+        }
+        
+        #previous {
+            left: -50px;
+            border-radius: 0px 7px 7px 7px;
+        }
+        
+        #counter {
+            top: 30px;
+            right: 35px;
+            width: auto;
+            position: absolute;
+        }
+        
+        #slider-wrap.active #next {
+            right: 0px;
+        }
+        
+        #slider-wrap.active #previous {
+            left: 0px;
+        }
+        /*bar*/
+        
+        #pagination-wrap {
+            min-width: 20px;
+            margin-top: 350px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 15px;
+            position: relative;
+            text-align: center;
+        }
+        
+        #pagination-wrap ul {
+            width: 100%;
+        }
+        
+        #pagination-wrap ul li {
+            margin: 0 4px;
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #fff;
+            opacity: 0.5;
+            position: relative;
+            top: 0;
+        }
+        
+        #pagination-wrap ul li.active {
+            width: 12px;
+            height: 12px;
+            top: 3px;
+            opacity: 1;
+            box-shadow: rgba(0, 0, 0, 0.1) 1px 1px 0px;
+        }
+        /*Header*/
+        
+        h1,
+        h2 {
+            text-shadow: none;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #666;
+            text-transform: uppercase;
+            font-size: 36px;
+        }
+        
+        h2 {
+            color: #7f8c8d;
+            font-family: Neucha, Arial, sans serif;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        /*ANIMATION*/
+        
+        #slider-wrap ul,
+        #pagination-wrap ul li {
+            -webkit-transition: all 0.3s cubic-bezier(1, .01, .32, 1);
+            -moz-transition: all 0.3s cubic-bezier(1, .01, .32, 1);
+            -o-transition: all 0.3s cubic-bezier(1, .01, .32, 1);
+            -ms-transition: all 0.3s cubic-bezier(1, .01, .32, 1);
+            transition: all 0.3s cubic-bezier(1, .01, .32, 1);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <div class="nav-header">
+            <div class="brand-logo">
+
+                <span class="brand-title">
+                        <h3 class="text-white">HOUSE RENTAL</h3>
+                    </span>
+
+            </div>
+        </div>
+        <!--**********************************
+            Nav header end
+        ***********************************-->
+
+        <!--**********************************
+            Header start
+        ***********************************-->
+        <div class="header">
+            <div class="header-content clearfix">
+
+                <div class="nav-control">
+                    <div class="hamburger">
+                        <span class="toggle-icon"><i class="icon-menu"></i></span>
+                    </div>
+                </div>
+                <div class="header-left">
+                    <div class="input-group icons">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-transparent border-0 pr-2 pr-sm-3" id="basic-addon1"><i class="mdi mdi-magnify"></i></span>
+                        </div>
+                        <input type="search" class="form-control" placeholder="Search" aria-label="Search Dashboard">
+                        <div class="drop-down animated flipInX d-md-none">
+                            <form action="#">
+                                <input type="text" class="form-control" placeholder="Search">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <ul class="clearfix">
+                        <li class="icons dropdown">
+                            <div class="user-img c-pointer position-relative" data-toggle="dropdown">
+                                <span class="activity active"></span>
+                                <img src="images/user.png" height="40" width="40" alt="">
+                            </div>
+                            <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
+                                <div class="dropdown-content-body">
+                                    <ul>
+                                        <li>
+                                            <a href="profile.html"><i class="icon-user"></i> <span>Profile</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="changepass.html"><i class="icon-lock"></i> <span>Change Password</span></a>
+                                        </li>
+                                        <li><a href="login.html"><i class="icon-key"></i> <span>Logout</span></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+        <!--**********************************
+            Sidebar start
+        ***********************************-->
+        <div class="nk-sidebar">
+            <div class="nk-nav-scroll">
+                <ul class="metismenu" id="menu">
+                    <li>
+                        <a href="#" aria-expanded="false">
+                            <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="mega-menu mega-menu-sm">
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-globe-alt menu-icon"></i><span class="nav-text">User</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="user-panel.html">User Panel</a></li>
+                            <li><a href="rent-house.html">Rent House</a></li>
+                            <li><a href="book-status.html">Book Status</a></li>
+                            <li><a href="user-helpdesk.html">User Helpdesk</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-envelope menu-icon"></i> <span class="nav-text">House Owner</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="owner-panel.html">Owner Panel</a></li>
+                            <li><a href="customer-request.html">Customer Request</a></li>
+                            <li><a href="tenate-details.html">Tenate Details</a></li>
+                            <li><a href="remainder.html">Remainder</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-screen-tablet menu-icon"></i><span class="nav-text">Admin</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="admin-panel.html">Admin Panel</a></li>
+                            <li><a href="approve-owner.html">Approve Owner</a></li>
+                            <li><a href="manage-owner.html">Manage Owner</a></li>
+                            <li><a href="manage-customer.html">Manage Customer</a></li>
+                            <li>
+                                <a href="admin-helpdesk.html">Admin Helpdesk</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+
+
+            <div class="container-fluid" style="background-color: rgb(145, 187, 241);height: 150vh;">
+
+
+                <div class="container pt-5">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29930.274893374415!2d85.79670987793597!3d20.329868078376364!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a190910433a10a7%3A0xd4c260c770582e18!2sChandrasekharpur%2C%20Bhubaneswar%2C%20Odisha!5e0!3m2!1sen!2sin!4v1612847877217!5m2!1sen!2sin"
+                        width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe> </div>
+            </div>
+        </div>
+        <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+        <!--**********************************
+        Scripts
+    ***********************************-->
+        <script src="plugins/common/common.min.js"></script>
+        <script src="js/custom.min.js"></script>
+        <script src="js/settings.js"></script>
+        <script src="js/gleek.js"></script>
+        <script src="js/styleSwitcher.js"></script>
+
+        <!-- Chartjs -->
+        <script src="./plugins/chart.js/Chart.bundle.min.js"></script>
+        <!-- Circle progress -->
+        <script src="./plugins/circle-progress/circle-progress.min.js"></script>
+        <!-- Datamap -->
+        <script src="./plugins/d3v3/index.js"></script>
+        <script src="./plugins/topojson/topojson.min.js"></script>
+        <script src="./plugins/datamaps/datamaps.world.min.js"></script>
+        <!-- Morrisjs -->
+        <script src="./plugins/raphael/raphael.min.js"></script>
+        <script src="./plugins/morris/morris.min.js"></script>
+        <!-- Pignose Calender -->
+        <script src="./plugins/moment/moment.min.js"></script>
+        <script src="./plugins/pg-calendar/js/pignose.calendar.min.js"></script>
+        <!-- ChartistJS -->
+        <script src="./plugins/chartist/js/chartist.min.js"></script>
+        <script src="./plugins/chartist-plugin-tooltips/js/chartist-plugin-tooltip.min.js"></script>
+
+
+
+        <script src="./js/dashboard/dashboard-1.js"></script>
+
+        <script>
+            //current position
+            var pos = 0;
+            //number of slides
+            var totalSlides = $('#slider-wrap ul li').length;
+            //get the slide width
+            var sliderWidth = $('#slider-wrap').width();
+
+
+            $(document).ready(function() {
+
+
+                /*****************
+                 BUILD THE SLIDER
+                *****************/
+                //set width to be 'x' times the number of slides
+                $('#slider-wrap ul#slider').width(sliderWidth * totalSlides);
+
+                //next slide 	
+                $('#next').click(function() {
+                    slideRight();
+                });
+
+                //previous slide
+                $('#previous').click(function() {
+                    slideLeft();
+                });
+
+
+
+                /*************************
+                 //*> OPTIONAL SETTINGS
+                ************************/
+                //automatic slider
+                var autoSlider = setInterval(slideRight, 3000);
+
+                //for each slide 
+                $.each($('#slider-wrap ul li'), function() {
+                    //set its color
+                    var c = $(this).attr("data-color");
+                    $(this).css("background", c);
+
+                    //create a pagination
+                    var li = document.createElement('li');
+                    $('#pagination-wrap ul').append(li);
+                });
+
+                //counter
+                countSlides();
+
+                //pagination
+                pagination();
+
+                //hide/show controls/btns when hover
+                //pause automatic slide when hover
+                $('#slider-wrap').hover(
+                    function() {
+                        $(this).addClass('active');
+                        clearInterval(autoSlider);
+                    },
+                    function() {
+                        $(this).removeClass('active');
+                        autoSlider = setInterval(slideRight, 3000);
+                    }
+                );
+
+
+
+            }); //DOCUMENT READY
+
+
+
+            /***********
+             SLIDE LEFT
+            ************/
+            function slideLeft() {
+                pos--;
+                if (pos == -1) {
+                    pos = totalSlides - 1;
+                }
+                $('#slider-wrap ul#slider').css('left', -(sliderWidth * pos));
+
+                //*> optional
+                countSlides();
+                pagination();
+            }
+
+
+            /************
+             SLIDE RIGHT
+            *************/
+            function slideRight() {
+                pos++;
+                if (pos == totalSlides) {
+                    pos = 0;
+                }
+                $('#slider-wrap ul#slider').css('left', -(sliderWidth * pos));
+
+                //*> optional 
+                countSlides();
+                pagination();
+            }
+
+
+
+
+            /************************
+             //*> OPTIONAL SETTINGS
+            ************************/
+            function countSlides() {
+                $('#counter').html(pos + 1 + ' / ' + totalSlides);
+            }
+
+            function pagination() {
+                $('#pagination-wrap ul li').removeClass('active');
+                $('#pagination-wrap ul li:eq(' + pos + ')').addClass('active');
+            }
+        </script>
+</body>
+
+</html>

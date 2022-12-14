@@ -1,0 +1,121 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+{% block content %}
+
+<!--**********************************
+            Sidebar end
+        ***********************************-->
+
+<!--**********************************
+            Content body start
+        ***********************************-->
+
+<div class="page-wrapper">
+    <div class="content pt-5" style="margin-left: 200px;">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <h4 class="page-title">Edit House</h4>
+            </div>
+        </div>
+        <div class="row pt-5">
+            <div class="col-lg-8 offset-lg-2">
+                <form action="/edit-house/{{house.id}}/" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% if msg %}
+                    <center style="color: red;">{{msg}}</center>
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>HOUSE NO.</label>
+                                <input class="form-control" value="{{house.house_no}}" type="text" name="house_no" placeholder="House Number...."
+                                    required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>ROOM SIZE.</label>
+                                <input class="form-control" value="{{house.room_size}}" type="text" name="room_size" placeholder="Room Size...."
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>AREA</label>
+                                <input class="form-control" value="{{house.area}}" type="text" name="area" placeholder="Area.."
+                                    required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>CITY</label>
+                                <input class="form-control" value="{{house.city}}" type="text" name="city" placeholder="City .."
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                                               
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>House Image 1</label>
+                                <input class="form-control" type="file" name="image1" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>House Image 2</label>
+                                <input class="form-control" type="file" name="image2" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>PRICE</label>
+                                <input class="form-control" value="{{house.price}}" type="number" name="price" placeholder="Price.." required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>LOCATION</label>
+                                <input class="form-control" value="{{house.location}}" type="text" name="location" placeholder="Location from Google Map.."
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>PINCODE</label>
+                                <input class="form-control" value="{{house.pincode}}" type="number" name="pincode" placeholder="Pincode.." required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>STATE</label>
+                                <input class="form-control" value="{{house.state}}" type="text" name="state" placeholder="State.." required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="m-t-20 text-center">
+                        <button type="submit" class="btn btn-primary submit-btn">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+<!--**********************************
+        Scripts
+    ***********************************-->
+{% endblock %}

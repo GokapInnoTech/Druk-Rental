@@ -1,0 +1,74 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+{% block content %}
+<!--**********************************
+            Sidebar end
+        ***********************************-->
+
+<!--**********************************
+            Content body start
+        ***********************************-->
+
+<div class="container-fluid mt-3">
+    <div class="container" style="margin-left: 300px;">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Book Status</h4>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered zero-configuration">
+                                <thead>
+                                    <tr>
+                                        <th>Owner Name</th>
+                                        <th>House No.</th>
+                                        <th>Room Size</th>
+                                        <th>Contact No.</th>
+                                        <th>Area</th>
+                                        <th>City</th>
+                                        <th>Pincode</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if booking %}
+                                    {% for i in booking %}
+                                    <tr>
+                                        <td>{{i.house.user.user.first_name}} {{i.house.user.user.last_name}}</td>
+                                        <td>{{i.house.house_no}}</td>
+                                        <td>{{i.house.room_size}}</td>
+                                        <td>{{i.house.user.contact_No}}</td>
+                                        <td>{{i.house.area}}</td>
+                                        <td>{{i.house.city}}</td>
+                                        <td>{{i.house.pincode}}</td>
+                                        <td>{{i.house.status}}</td>
+                                        <td>
+                                            <a href="/view-house/{{i.house.id}}/">
+                                                <span style="color: blue;">View</span>
+                                            </a>
+                                            {% if i.house.status == "Available" %}
+                                            <a href="/delete-booking/{{i.id}}/">
+                                                <span style="color: red;">Delete</span>
+                                            </a>
+                                            {% endif %}
+                                        </td>
+
+                                    </tr>
+                                    {% endfor %}
+                                    {% else %}
+                                    No Request available yet.
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</div>
+{% endblock %}

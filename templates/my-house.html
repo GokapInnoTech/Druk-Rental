@@ -1,0 +1,53 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+{% block content %}
+        <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+
+
+            <div class="container-fluid" style="background-color: rgb(145, 187, 241);height: 150vh;">
+                <h3>
+                    <button class="btn btn-primary" style="background-color: white;"><a href="/add-house/">Add House</a></button>
+                </h3>
+
+                <div class="container pt-5">
+                    <div class="card-deck">
+                        {% for h in houses %}
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <p class="card-text">HOUSE NO.: {{h.house_no}}</p>
+                                <p class="card-text">OWNER CONTACT NO.: {{h.user.contact_No}}</p>
+                                <p class="card-text">ROOM SIZE: {{h.room_size}}</p>
+                                <p class="card-text">AREA: {{h.area}}</p>
+                                <p class="card-text">CITY: {{h.city}}</p>
+                                <p class="card-text">PINCODE: {{h.pincode}}</p>
+                                <p class="card-text">STATUS: {{h.status}}</p>
+                                <p class="card-text">PRICE: {{h.price}}</p>
+                            </div>
+                            <div class="text-center">
+                                <a href="/view-house/{{h.id}}/"><button class="btn btn-primary submit-btn" style="margin-bottom: 10px; border-radius: 20px;">View House</button></a>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                  
+                </div>
+            </div>
+        </div>
+        <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+        <!--**********************************
+        Scripts
+    ***********************************-->
+    {% endblock %}
