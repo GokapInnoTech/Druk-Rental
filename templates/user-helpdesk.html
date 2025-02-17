@@ -10,14 +10,23 @@
         ***********************************-->
         <div class="content-body">
             <div class="container mt-5">
-                <form action="/helpdesk/" method="POST">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="exampleFormControlTextarea1">Message</label>
-                        <textarea name="message" class="form-control" id="exampleFormControlTextarea1" rows="10" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-info" style="margin-left: 500px; border-radius: 20px;">Submit</button>
-                </form>
+                {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+{% if success %}
+    <div class="alert alert-success">{{ success }}</div>
+{% else %}
+    <form method="POST" action="/helpdesk/">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="message">Your Message:</label>
+            <textarea name="message" required class="form-control" rows="10"></textarea>
+            <button type="submit" class="btn btn-info" style="margin-left: 500px; border-radius: 20px;">Submit</button>
+        </div>
+       
+    </form>
+{% endif %}
             </div>
         </div>
     </div>

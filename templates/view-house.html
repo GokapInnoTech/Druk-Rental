@@ -9,7 +9,9 @@
             Content body start
         ***********************************-->
 <div class="content-body">
-
+<script>
+    console.log('{{house_details}}')
+</script>
 
     <div class="container-fluid" style="background-color: rgb(145, 187, 241);height: 150vh;">
 
@@ -66,31 +68,37 @@
                             style="margin-bottom: 10px; border-radius: 20px;">Book Now</button>
                     </a>
                 </div>&nbsp;&nbsp;&nbsp;
-                {% endif %}
-                {% endif %}
+                {%endif%}
+                {%endif%}
                 {% if request.user.userprofile_set.first.userType == "Owner" %}
                 {% if house_details.status == "Booked" %}
-
                 <div class="text-center pt-5">
-                    <a href="/available-house/{{house_details.id}}/">
+                    <a href="{% url 'available_house' house_details.id %}">
                         <button class="btn btn-primary submit-btn"
                             style="margin-bottom: 10px; border-radius: 20px;">Available Now</button>
                     </a>
-                </div>&nbsp;&nbsp;&nbsp;
+                </div>
                 {% endif %}
+
                 <div class="text-center pt-5">
-                    <a href="/edit-house/{{house_details.id}}/">
+                    <a href="/edit-house/{{house_details.id}}">
                         <button class="btn btn-primary submit-btn"
                             style="margin-bottom: 10px; border-radius: 20px;">Edit House</button>
                     </a>
-                </div>&nbsp;&nbsp;&nbsp;
+                </div>
                 {% endif %}
+
                 <div class="text-center pt-5">
-                    <a href="/location/{{house_details.location}}" target="_blank">
+                    {% if house_details.location %}
+                    <a href="/location/{{house_details.id}}" target="_blank">
                         <button class="btn btn-primary submit-btn" style="margin-bottom: 10px; border-radius: 20px;">See
                             Location</button>
                     </a>
+                    {% else %}
+                    <p class="text-danger">❌ Location Not Available</p>
+                    {% endif %}
                 </div>
+
                 &nbsp;&nbsp;&nbsp;
 
             </div>

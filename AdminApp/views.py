@@ -2,9 +2,8 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.core.mail import send_mail
-
 from django.conf import settings
-from .models import House, BookingRequest
+from .models import House, BookingRequest, HelpDeskModel
 from HouseRentManagementApp.models import UserProfile, OTP
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -170,8 +169,14 @@ def MyHouse(request):
         return redirect('login')
     h = House.objects.filter(user=UserProfile.objects.get(user=request.user))
     return render(request, 'my-house.html',{'houses':h})
-def Location(request):
-    return render(request, 'see-location.html')
+# def Location(request,location):
+#     return render(request, 'see-location.html')
+def Location(request, id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    h = House.objects.get(id=id)
+    # house = get_object_or_404(House, location=location)  # Retrieve house by location
+    return render(request, 'see-location.html', {'house': h})
 
 def RentHouse(request):
     if not request.user.is_authenticated:
@@ -342,18 +347,55 @@ def DeletePublicBooking(request,id):
     return redirect('customer-request')
 
 
-def HelpDesk(request):
+def HelpDeskView(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    if request.method == "POST":
-        message = request.POST.get('message')
-        subject = 'From Home Rental Service'
-        body = f'Hi Admin, \n \n \t {request.user.first_name} is trying to contact you. \n \n \t  email: {request.user.email} \n \n \t message: {message} \n\n Thanks, \n Home Rental Service'
-        from_email = settings.EMAIL_HOST_USER
-        to_email = ['erentalhouse.service@gmail.com']
-        send_mail(subject, body, from_email, to_email, fail_silently=True)
-    return render(request, 'user-helpdesk.html')
 
+    user_profile = UserProfile.objects.get(user=request.user)  # Fetch the user profile
+    booked_houses = BookingRequest.objects.filter(user=user_profile, status="Booked").select_related('house')
+
+    if not booked_houses.exists():
+        return render(request, 'user-helpdesk.html', {'error': 'You cannot send a message. You must book a house first.'})
+
+    if request.method == "POST":
+        message_text = request.POST.get('message')
+
+        for booking in booked_houses:
+            house_owner = booking.house.user  # Fetch house owner
+            house_owner_email = house_owner.user.email  # House owner email
+            admin_email = 'admin@example.com'  # Change this to actual admin email
+
+            # Save message in the database
+            HelpDeskModel.objects.create(
+                user=user_profile,
+                house=booking.house,
+                owner=house_owner,
+                message=message_text
+            )
+
+            # Email Body
+            subject = "HelpDesk Query - Home Rental Service"
+            body = f"""
+            Hi {house_owner.user.first_name},
+
+            {request.user.first_name} has booked your house ({booking.house.house_no}) and wants to contact you.
+
+            User Email: {request.user.email}
+            House Owner Email: {house_owner_email}
+
+            Message:
+            {message_text}
+
+            Regards,
+            Home Rental Service
+            """
+
+            # Send Email to Owner & CC Admin
+            send_mail(subject, body, settings.EMAIL_HOST_USER, [house_owner_email, admin_email], fail_silently=True)
+
+        return render(request, 'user-helpdesk.html', {'success': 'Your message has been sent successfully.'})
+
+    return render(request, 'user-helpdesk.html')
 
 def ApproveOwner(request):
     if not request.user.is_authenticated:

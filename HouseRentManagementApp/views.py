@@ -4,7 +4,8 @@ from .models import UserProfile,OTP
 from django.contrib.auth import authenticate,login,logout
 from django.core.mail import send_mail
 from django.conf import settings
-
+from django.contrib import messages
+import logging
 # Create your views here.
 def IndexPage(request):
     return render(request, 'index.html')
@@ -14,21 +15,71 @@ def AboutPage(request):
     return render(request, 'about.html')
 
 
+# Set up logging
+logger = logging.getLogger(__name__)
+
 def ContactPage(request):
     if request.method == "POST":
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        subject = request.POST.get('subject')
-        message = request.POST.get('message')
+        name = request.POST.get('name', '').strip()
+        email = request.POST.get('email', '').strip()
+        subject = request.POST.get('subject', '').strip()
+        message = request.POST.get('message', '').strip()
 
-        subject = f'From Home Rental Service, {subject}'
-        body = f'Hi Admin, \n \n \t {name} is trying to contact you. \n \n \t  email: {email} \n \n \t message: {message} \n\n Thanks, \n Home Rental Service'
-        from_email = settings.EMAIL_HOST_USER
-        to_email = ['ehouserental.services']
-        send_mail(subject, body, from_email, to_email, fail_silently=True)
-        sub1 = "Home Rental Service"
-        body1 = "Thanks for contacting us. We will get back to you within 48 hrs."
-        send_mail(sub1, body1, from_email, [email], fail_silently=True)
+        if not name or not email or not subject or not message:
+            messages.error(request, "❌ All fields are required.")
+            return redirect('contact')
+
+        try:
+            # Admin notification email
+            admin_subject = f"Home Rental Service Inquiry: {subject}"
+            admin_body = f"""
+            Hi Admin,
+
+            {name} is trying to contact you.
+
+            📧 Email: {email}
+
+            📩 Message:
+            {message}
+
+            Regards,
+            Home Rental Service
+            """
+            from_email = settings.EMAIL_HOST_USER
+            to_admin = ['admin@example.com']  # Replace with the actual admin email
+
+            send_mail(admin_subject, admin_body, from_email, to_admin, fail_silently=False)
+
+            # Auto-response email to user
+            user_subject = "Thank you for reaching out to Home Rental Service!"
+            user_body = f"""
+            Hi {name},
+
+            Thank you for contacting us! Your message has been received, and we will get back to you within 48 hours.
+
+            Here’s what you sent:
+            ----------------------------
+            📧 Email: {email}
+
+            📩 Message:
+            {message}
+            ----------------------------
+
+            If this was a mistake, you can ignore this email.
+
+            Regards,  
+            Home Rental Service Team
+            """
+
+            send_mail(user_subject, user_body, from_email, [email], fail_silently=False)
+
+            messages.success(request, "✅ Your message has been sent successfully! We will contact you soon.")
+            return redirect('contact')
+
+        except Exception as e:
+            logger.error(f"Email sending failed: {str(e)}")
+            messages.error(request, "❌ Failed to send your message. Please try again later.")
+
     return render(request, 'contact.html')
 
 

@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-#from HouseRentManagementApp import views
+# from HouseRentManagementApp import views
 from HouseRentManagementApp.views import (
     IndexPage,
     AboutPage,
@@ -49,7 +49,7 @@ from AdminApp.views import (
     MyHouse,
     Location,
 
-    HelpDesk,
+    HelpDeskView,
     AdminHelpDesk,
     ApproveOwner,
     ApproveAdmin,
@@ -64,6 +64,9 @@ from AdminApp.views import (
 
 from django.conf.urls.static import static
 from django.conf import settings
+from django.urls import path
+from HouseRentManagementApp import views
+# from houserentproject import views
 
 
 urlpatterns = [
@@ -94,7 +97,7 @@ urlpatterns = [
     path('my-booking/', MyBooking, name="my-booking"),
     path('customer-request/', CustomerRequest, name="customer-request"),
 
-    path('helpdesk/', HelpDesk, name='helpdesk'),
+    path('helpdesk/', HelpDeskView, name='helpdesk'),
     path('admin-helpdesk/', AdminHelpDesk, name='admin-helpdesk'),
     path('all-user/', AllUser, name='all-user'),
     path('view-user/<int:id>/', ViewUser, name='view-user'),
@@ -106,7 +109,7 @@ urlpatterns = [
     path('approve-customer-request/<int:id>/', ApproveCustomerRequest, name='approve-customer-request'),
     path('confirm-booking/<int:id>/', ConfirmBooking, name='confirm-booking'),
     path('available-house/<int:id>/', AvailableHouse, name='available-house'),
-    path('location/<int:id>/', Location, name='location'),
+    path('location/<int:id>/', Location, name='location_view'),
 
     path('dashboard/', Dashboard, name='dashboard')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
